@@ -13,13 +13,17 @@ class Homepage extends StatefulWidget {
   State<Homepage> createState() => _HomepageState();
 }
 
+enum direction { UP, DOWN }
+
 class _HomepageState extends State<Homepage> {
   // ball coordinates
   double ballX = 0;
   double ballY = 0;
+  var ballDirection = direction.DOWN;
 
   // game settings
   bool hasGameStarted = false;
+  bool isGameOver = false;
 
   // player variables
   double playerX = 0;
@@ -41,15 +45,57 @@ class _HomepageState extends State<Homepage> {
   }
 
   void startGame() {
-    if(!_focusNode.hasFocus){
+    if (!_focusNode.hasFocus) {
       _focusNode.requestFocus();
     }
 
     hasGameStarted = true;
     Timer.periodic(const Duration(milliseconds: 10), (timer) {
-      setState(() {
+      // ball direction
+      updateDirection();
+
+      // ball movement
+      moveBall();
+
+      // check if game is over
+      if (gameLost()) {
+        timer.cancel();
+        hasGameStarted = false;
+        ballX = 0;
+        ballY = 0;
+        ballDirection = direction.DOWN;
+        playerX = 0;
+        playerWidth = 0.5;
+      }
+    });
+  }
+
+  bool gameLost() {
+    if (ballY <= -1) {
+      return true;
+    }
+    return false;
+  }
+
+  void moveBall() {
+    setState(() {
+      if (ballDirection == direction.DOWN) {
         ballY += 0.01;
-      });
+      } else if (ballDirection == direction.UP) {
+        ballY -= 0.01;
+      }
+    });
+  }
+
+  void updateDirection() {
+    // collision checks
+    setState(() {
+      if (ballY >= 0.9 &&
+          (ballX >= playerX && ballX <= playerX + playerWidth)) {
+        ballDirection = direction.UP;
+      } else if (ballY <= -0.9) {
+        ballDirection = direction.DOWN;
+      }
     });
   }
 
