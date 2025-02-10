@@ -62,7 +62,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   void moveRight() {
-    if (!(playerX + 0.1 >= 1)) {
+    if (!(playerX + 0.1 + playerWidth >= 1)) {
       setState(() {
         playerX += 0.1;
       });
