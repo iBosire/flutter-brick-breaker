@@ -2,11 +2,25 @@ import 'package:flutter/material.dart';
 
 class MyPlayer extends StatelessWidget {
   final playerX;
-  
-  const MyPlayer({super.key, required this.playerX});
+  final playerWidth;
+
+  const MyPlayer({super.key, required this.playerX, required this.playerWidth});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Container(
+      alignment: Alignment(playerX, 0.9),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          height: 10,
+          width: MediaQuery.of(context).size.width * playerWidth / 2,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+          ),
+        ),
+      ),
+    );
   }
 }
